@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>般若智慧 · 交互学习</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c8a96e;
+    --gold-light: #e8d5a3;
+    --gold-dim: #8a7045;
+    --ink: #1a1612;
+    --ink-mid: #3d3428;
+    --ink-light: #6b5d4a;
+    --paper: #faf6ef;
+    --paper-warm: #f5ede0;
+    --paper-deep: #ede0cc;
+    --lotus: #9b5e6b;
+    --teal: #3d7a6e;
+    --teal-light: #e8f4f1;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle at 20% 80%, rgba(200,169,110,0.06) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(157,94,107,0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 56px 20px 40px;
+    position: relative;
+  }
+
+  .header-ornament {
+    font-size: 13px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(28px, 6vw, 44px);
+    font-weight: 300;
+    color: var(--ink);
+    letter-spacing: 8px;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+
+  header h1 span {
+    color: var(--gold-dim);
+  }
+
+  header p {
+    font-size: 14px;
+    color: var(--ink-light);
+    letter-spacing: 2px;
+    line-height: 1.8;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 24px auto;
+  }
+
+  /* Nav pills */
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 0 0 40px;
+  }
+
+  .nav-btn {
+    padding: 8px 20px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    border: 1px solid var(--paper-deep);
+    border-radius: 30px;
+    background: var(--paper);
+    color: var(--ink-light);
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .nav-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold-dim);
+    background: var(--paper-warm);
+  }
+
+  .nav-btn.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--gold-light);
+  }
+
+  /* Panels */
+  .panel { display: none; animation: fadeIn 0.35s ease; }
+  .panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Cards */
+  .card {
+    background: white;
+    border: 1px solid var(--paper-deep);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 16px;
+  }
+
+  .card-eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .card h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .card p, .card-body {
+    font-size: 15px;
+    color: var(--ink-mid);
+    line-height: 1.95;
+  }
+
+  /* Quote block */
+  .quote {
+    border-left: 3px solid var(--gold);
+    background: var(--paper-warm);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+
+  .quote p {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    color: var(--ink);
+    line-height: 2;
+    font-weight: 300;
+  }
+
+  .quote cite {
+    display: block;
+    font-size: 12px;
+    color: var(--gold-dim);
+    letter-spacing: 2px;
+    margin-top: 10px;
+    font-style: normal;
+  }
+
+  /* Section label */
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin: 28px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--paper-deep);
+  }
+
+  /* Step rows */
+  .steps { background: white; border: 1px solid var(--paper-deep); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+
+  .step-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 22px 28px;
+    border-bottom: 1px solid var(--paper-deep);
+    transition: background 0.2s;
+  }
+
+  .step-row:last-child { border-bottom: none; }
+  .step-row:hover { background: var(--paper); }
+
+  .step-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    color: var(--gold-dim);
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-body h3 {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .step-body p {
+    font-size: 14px;
+    color: var(--ink-light);
+    line-height: 1.85;
+  }
+
+  /* Two column grid */
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 540px) { .grid2 { grid-template-columns: 1fr; } }
+
+  .col-card {
+    background: white;
+    border: 1px solid var(--paper-deep);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+  }
+
+  .col-card h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--paper-deep);
+  }
+
+  .col-card p {
+    font-size: 14px;
+    color: var(--ink-light);
+    line-height: 1.85;
+  }
+
+  /* Sutra accordion */
+  .sutra-list { background: white; border: 1px solid var(--paper-deep); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+
+  .sutra-item {
+    border-bottom: 1px solid var(--paper-deep);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .sutra-item:last-child { border-bottom: none; }
+
+  .sutra-header {
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .sutra-cn {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--ink);
+    letter-spacing: 2px;
+    line-height: 1.6;
+  }
+
+  .sutra-arrow {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--paper-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 10px;
+    color: var(--gold-dim);
+    transition: transform 0.25s, background 0.2s;
+  }
+
+  .sutra-item.open .sutra-arrow {
+    transform: rotate(180deg);
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--gold-light);
+  }
+
+  .sutra-body {
+    display: none;
+    padding: 0 28px 22px;
+    font-size: 14px;
+    color: var(--ink-mid);
+    line-height: 1.95;
+    border-top: 1px solid var(--paper-deep);
+    margin-top: 0;
+    padding-top: 18px;
+  }
+
+  .sutra-item.open .sutra-body { display: block; }
+  .sutra-item.open { background: var(--paper); }
+
+  /* Meditation box */
+  .med-box {
+    background: var(--teal-light);
+    border: 1px solid rgba(61,122,110,0.2);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+
+  .med-box h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--teal);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .med-box p {
+    font-size: 14px;
+    color: #2a5a50;
+    line-height: 2;
+  }
+
+  .med-box strong { color: var(--teal); font-weight: 500; }
+
+  /* Four schools grid */
+  .schools-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 480px) { .schools-grid { grid-template-columns: 1fr; } }
+
+  .school-chip {
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-deep);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.7;
+  }
+
+  .school-chip strong {
+    display: block;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  /* Book cards */
+  .book-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .book-card {
+    background: white;
+    border: 1px solid var(--paper-deep);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .book-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--gold-light);
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .book-info h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .book-info p {
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.8;
+  }
+
+  .book-info .rec {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--teal);
+    background: var(--teal-light);
+    padding: 3px 10px;
+    border-radius: 12px;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 48px 20px 56px;
+  }
+
+  footer p {
+    font-size: 13px;
+    color: var(--ink-light);
+    letter-spacing: 2px;
+    line-height: 2;
+  }
+
+  footer .lotus-symbol {
+    font-size: 22px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 14px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <span class="header-ornament">· 佛法学习 ·</span>
+    <h1>般<span>若</span>智慧</h1>
+    <p>为有打坐基础的修行者整理</p>
+    <div class="divider"></div>
+  </header>
+
+  <nav class="nav">
+    <button class="nav-btn active" onclick="show('what', this)">般若是什么</button>
+    <button class="nav-btn" onclick="show('kong', this)">空性义理</button>
+    <button class="nav-btn" onclick="show('xinjing', this)">心经逐句</button>
+    <button class="nav-btn" onclick="show('jingtu', this)">与净土相融</button>
+    <button class="nav-btn" onclick="show('zuochan', this)">打坐入口</button>
+    <button class="nav-btn" onclick="show('cidi', this)">深入次第</button>
+  </nav>
+
+  <!-- Panel 1: 般若是什么 -->
+  <div id="what" class="panel active">
+    <div class="card">
+      <span class="card-eyebrow">定义</span>
+      <h2>般若不是普通的聪明</h2>
+      <p class="card-body">梵文 Prajñā，不是博学，不是逻辑推理能力。历代祖师的定义是：<strong style="color:var(--ink)">如实照见一切法实相的智慧</strong>——不加任何投射、扭曲、执取地，看见万物本来的样子。</p>
+    </div>
+
+    <div class="quote">
+      <p>般若不是用来"学会"的，是用来"照见"的。每一次打坐，每一声佛号，每一个当下清醒的觉察——都是般若在工作。</p>
+    </div>
+
+    <div class="section-label">两个层面</div>
+
+    <div class="grid2">
+      <div class="col-card">
+        <h3>文字般若</h3>
+        <p>通过闻思经典，在知解层面理解空性义理。《心经》《金刚经》走的是这条路。这是地图，是入门，是基础。</p>
+      </div>
+      <div class="col-card">
+        <h3>实相般若</h3>
+        <p>在禅定中亲证空性，不再只是"懂了"，而是"见了"。这才是般若真正兑现的地方，需要定力支撑。</p>
+      </div>
+    </div>
+
+    <div class="card" style="background: var(--paper-warm); border-color: var(--paper-deep);">
+      <span class="card-eyebrow">关键提示</span>
+      <p class="card-body">般若永远和禅定捆绑在一起。没有定，般若只是概念；有了定，般若才是活的。<strong style="color:var(--ink)">有打坐基础，正是学般若最好的时机。</strong>法师讲的是地图，打坐走的是路，两者缺一不可。</p>
+    </div>
+  </div>
+
+  <!-- Panel 2: 空性 -->
+  <div id="kong" class="panel">
+    <div class="card">
+      <span class="card-eyebrow">核心</span>
+      <h2>空性不是"什么都没有"</h2>
+      <p class="card-body">"空"字最容易被误解为虚无。龙树菩萨说：空性是<strong style="color:var(--ink)">依存性的另一个名字</strong>。万物互相依存，没有任何东西可以独立自存，所以没有固定不变的"自性"。没有自性，叫做空。</p>
+    </div>
+
+    <div class="quote">
+      <p>众因缘生法，我说即是空，亦为是假名，亦是中道义。</p>
+      <cite>——龙树菩萨《中论》</cite>
+    </div>
+
+    <div class="section-label">三个要点</div>
+
+    <div class="steps">
+      <div class="step-row">
+        <div class="step-num">一</div>
+        <div class="step-body">
+          <h3>空 ≠ 没有</h3>
+          <p>这朵花是空的，不是说花不存在，是说花没有独立自存的"花性"。抽掉土壤、水分、阳光任何一个条件，"花"就不成立。花存在，但没有孤立自存的实体。</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">二</div>
+        <div class="step-body">
+          <h3>空 = 依存性</h3>
+          <p>"左"依赖"右"而存在，没有右就没有左。一切法皆如此，互相依存，找不到独立的自性。你的身体、念头、情绪，全是条件聚合的产物，找不到一个永恒不变的"核"。</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">三</div>
+        <div class="step-body">
+          <h3>空而不空 · 中道</h3>
+          <p>空性不落"有"边（以为有固定实体），也不落"无"边（以为什么都没有）。正因为空，才能因缘和合、千变万化地显现。空有不二，是为中道。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:var(--paper-warm)">
+      <span class="card-eyebrow">打坐体验</span>
+      <p class="card-body">打坐时观察升起的念头：<strong style="color:var(--ink)">它从哪里来？它住在哪里？它往哪里去？</strong>来处找不到，住处找不到，去处找不到——但它确实升起过。来处空，住处空，去处空，但显现不虚。这就是空性在当下的直接体验入口。</p>
+    </div>
+  </div>
+
+  <!-- Panel 3: 心经 -->
+  <div id="xinjing" class="panel">
+    <div class="card">
+      <span class="card-eyebrow">经典</span>
+      <h2>《心经》核心句解读</h2>
+      <p class="card-body">共二百六十字，字字般若。点击每一句，展开义理解读。建议配合诵经，读一句，坐一坐，看身心有何反应。</p>
+    </div>
+
+    <div class="sutra-list">
+      <div class="sutra-item" onclick="toggleSutra(this)">
+        <div class="sutra-header">
+          <div class="sutra-cn">观自在菩萨，行深般若波罗蜜多时</div>
+          <div class="sutra-arrow">▼</div>
+        </div>
+        <div class="sutra-body">观自在，即观世音菩萨。"行深"——不是浅尝，是在深度禅定中修习般若。这句话开门见山：般若必须配合深定，不是坐那儿想想就能证得的。有打坐基础，是亲近这部经最好的条件。</div>
+      </div>
+
+      <div class="sutra-item" onclick="toggleSutra(this)">
+        <div class="sutra-header">
+          <div class="sutra-cn">照见五蕴皆空，度一切苦厄</div>
+          <div class="sutra-arrow">▼</div>
+        </div>
+        <div class="sutra-body">五蕴：色（身体）、受（感受）、想（念头）、行（意志冲动）、识（分别意识）。你以为"我"是由这五种东西组成的——但"照见"它们都是空的，没有固定自性，"我"的幻觉就开始松动。幻觉松动，执取减少，苦自然消解。</div>
+      </div>
+
+      <div class="sutra-item" onclick="toggleSutra(this)">
+        <div class="sutra-header">
+          <div class="sutra-cn">色即是空，空即是色</div>
+          <div class="sutra-arrow">▼</div>
+        </div>
+        <div class="sutra-body">
+          <strong style="color:var(--ink); display:block; margin-bottom:8px">色即是空：</strong>有形有相的现象，没有固定自性，因缘和合而显现，故说"空"。不是说这朵花不存在，是说花没有离开因缘的独立实体。
+          <br><br>
+          <strong style="color:var(--ink); display:block; margin-bottom:8px">空即是色：</strong>正因为空（无固定自性），才能因缘和合、千变万化地显现。空和色不是两件事，是同一实相的正反面。这是般若最核心的洞见。
+        </div>
+      </div>
+
+      <div class="sutra-item" onclick="toggleSutra(this)">
+        <div class="sutra-header">
+          <div class="sutra-cn">不生不灭，不垢不净，不增不减</div>
+          <div class="sutra-arrow">▼</div>
+        </div>
+        <div class="sutra-body">从空性的维度看，一切法的实相没有生灭、没有染净、没有增减。这不是说现象层面没有生灭，而是在实相层面，生灭只是显现，自性从未生灭过。<br><br>打坐中可以直接体会：那个觉知本身，有没有生灭？念头在生灭，但那个"知道念头生灭"的觉知，它本身生灭了吗？</div>
+      </div>
+
+      <div class="sutra-item" onclick="toggleSutra(this)">
+        <div class="sutra-header">
+          <div class="sutra-cn">无挂碍故，无有恐怖，远离颠倒梦想</div>
+          <div class="sutra-arrow">▼</div>
+        </div>
+        <div class="sutra-body">挂碍来自执取。空性智慧照破执取，心就没有挂碍；没有挂碍，就没有恐怖；没有恐怖，就远离了颠倒的妄想。这是般若在心理层面的直接效果——不是压制烦恼，是看穿烦恼的根源。</div>
+      </div>
+
+      <div class="sutra-item" onclick="toggleSutra(this)">
+        <div class="sutra-header">
+          <div class="sutra-cn">究竟涅槃</div>
+          <div class="sutra-arrow">▼</div>
+        </div>
+        <div class="sutra-body">般若修行的终点。涅槃不是死亡，不是虚无，是贪嗔痴彻底熄灭之后的清凉自在。"究竟"——不是暂时的，是彻底的、不可逆的解脱。一切修行，最终都指向这里。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 4: 净土 -->
+  <div id="jingtu" class="panel">
+    <div class="card">
+      <span class="card-eyebrow">净土与般若</span>
+      <h2>念佛即是般若</h2>
+      <p class="card-body">很多净土行人有疑惑：我念佛，跟般若有什么关系？关系极深。不需要放下净土去学般若，而是用般若的眼睛，把净土修得更深。</p>
+    </div>
+
+    <div class="quote">
+      <p>能念之心即是般若，所念之佛即是实相。</p>
+      <cite>——蕅益大师</cite>
+    </div>
+
+    <div class="section-label">三个连接点</div>
+
+    <div class="steps">
+      <div class="step-row">
+        <div class="step-num">一</div>
+        <div class="step-body">
+          <h3>念佛的那个心，就是般若</h3>
+          <p>清清楚楚、不散乱、当下在场地念"阿弥陀佛"——那个念佛的心的本质，就是般若的显发。不需要另外去找般若，般若就在每一声佛号里。</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">二</div>
+        <div class="step-body">
+          <h3>一心不乱，能所双亡</h3>
+          <p>念佛念到一心不乱，能念的心和所念的佛打成一片——那一刻的体验，和禅宗见性、般若证空，是同一回事。门不同，到的地方一样。</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">三</div>
+        <div class="step-body">
+          <h3>用般若眼睛念佛</h3>
+          <p>念佛时知道：能念的"我"是空的，所念的"佛号"是空的，但念佛的当下是真实的。不执取，不散乱——这就是般若与净土的合修。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">各宗派的叫法，指向同一处</div>
+
+    <div class="schools-grid">
+      <div class="school-chip"><strong>禅宗</strong>反观自性 / 念佛是谁</div>
+      <div class="school-chip"><strong>净土宗</strong>念佛是谁 / 一心不乱</div>
+      <div class="school-chip"><strong>般若</strong>观照实相 / 照见五蕴皆空</div>
+      <div class="school-chip"><strong>藏传</strong>本觉 / 觉性认知</div>
+    </div>
+  </div>
+
+  <!-- Panel 5: 打坐 -->
+  <div id="zuochan" class="panel">
+    <div class="card">
+      <span class="card-eyebrow">实修</span>
+      <h2>打坐中的般若入口</h2>
+      <p class="card-body">不是另一种方法，是在现有打坐基础上，加一层觉照。入静之后，用以下方式观察，不需要刻意改变已有的修行方式。</p>
+    </div>
+
+    <div class="med-box">
+      <h3>观察一：念头从哪里来</h3>
+      <p>不刻意压念头，也不追念头。当一个念头升起，问：<strong>它从哪里来？它住在哪里？它往哪里去？</strong><br><br>
+      来处找不到。住处找不到。去处找不到。但它确实升起过，确实有显现。<br><br>
+      <strong>来处空，住处空，去处空——但显现不虚。这就是空性在当下的直接体验。</strong></p>
+    </div>
+
+    <div class="med-box">
+      <h3>观察二：谁在知道</h3>
+      <p>入静之后，轻轻地问：<strong>"这一刻，'我在打坐'这个念头，是谁知道的？"</strong><br><br>
+      那个"知道"的——它有形状吗？有颜色吗？有来处吗？<br><br>
+      找不到——但它确实在。<br><br>
+      <strong>找不到，就是空。确实在，就是不空。空而不空——这就是般若最直接的入口。</strong></p>
+    </div>
+
+    <div class="quote">
+      <p>每一次打坐，每一声佛号，每一个当下清醒的觉察——都是般若在工作。不需要另外找般若，般若就在修行本身里。</p>
+    </div>
+  </div>
+
+  <!-- Panel 6: 次第 -->
+  <div id="cidi" class="panel">
+    <div class="card">
+      <span class="card-eyebrow">次第</span>
+      <h2>深入般若的三步</h2>
+      <p class="card-body">按顺序来，每一步都要真正消化、身心有所体会，再进下一步。不要贪快，般若的深度是打坐打出来的，不是读出来的。</p>
+    </div>
+
+    <div class="book-list">
+      <div class="book-card">
+        <div class="book-num">一</div>
+        <div class="book-info">
+          <h3>读懂《心经》</h3>
+          <p>不只是背，是真正理解每一句的义理。读一段，坐一坐，看身心有何反应。两百六十字，字字般若。</p>
+          <span class="rec">推荐：圣严法师《心的经典》，深入浅出</span>
+        </div>
+      </div>
+
+      <div class="book-card">
+        <div class="book-num">二</div>
+        <div class="book-info">
+          <h3>深入《金刚经》</h3>
+          <p>般若的展开版，专门破"相"——破法相、人相、众生相、寿者相。配合打坐效果最佳。核心句：应无所住而生其心。</p>
+          <span class="rec">与打坐配合，每读一段即入座观照</span>
+        </div>
+      </div>
+
+      <div class="book-card">
+        <div class="book-num">三</div>
+        <div class="book-info">
+          <h3>接触《中论》</h3>
+          <p>龙树菩萨的般若哲学最严密展开。读懂了，空性义理就真正通了。有一定难度，建议在法师引导下学习。</p>
+          <span class="rec">建议：先把前两步吃透，因缘具足再来</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote" style="margin-top: 20px;">
+      <p>般若不是用来"学会"的，是用来"照见"的。法师讲的是地图，打坐走的是路。您已经在路上了。</p>
+    </div>
+  </div>
+
+  <footer>
+    <span class="lotus-symbol">✦</span>
+    <p>愿此功德，回向法界一切众生</p>
+    <p style="margin-top:8px; font-size:12px; letter-spacing:1px">南无阿弥陀佛</p>
+  </footer>
+
+</div>
+
+<script>
+  function show(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleSutra(el) {
+    const wasOpen = el.classList.contains('open');
+    document.querySelectorAll('.sutra-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) el.classList.add('open');
+  }
+</script>
+</body>
+</html>
